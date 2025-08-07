@@ -9,6 +9,8 @@ use App\Http\Controllers\ManufactureController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\SellController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,7 +18,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-});
+})->name('dashboard');
 
 Route::get('/sells', function () {
     return view('sells');
@@ -37,6 +39,15 @@ Route::get('/incomes', function () {
 Route::get('/shops', function () {
     return view('shops');
 });
+
+
+Route::get('/login', function () {
+    return view('login');
+});
+
+Route::post('/login', [AuthController::class, 'store'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logouts', [AuthController::class, 'logout'])->name('user.logout');
 
 // Inventory routes
 Route::prefix('inventory')->group(function () {
@@ -106,8 +117,18 @@ Route::prefix('expenses')->group(function () {
 });
 
 
-// expense routes
+// sells routes
 Route::prefix('sells')->group(function () {
+
+    Route::get('/add', function () {
+        $shops = \App\Models\Shop::all();
+        $latestSale = \App\Models\Sell::latest()->first();
+        $saleId = $latestSale ? $latestSale->id + 1 : 1;
+    
+        return view('newSale', compact('shops', 'saleId'));
+    })->name('sells.create');
+    
+
     Route::get('/', [SellController::class, 'index'])->name('sells.index');
     Route::post('/', [SellController::class, 'store'])->name('sells.store');
     Route::get('/{id}', [SellController::class, 'edit'])->name('sells.edit');
@@ -116,6 +137,14 @@ Route::prefix('sells')->group(function () {
 });
 
 
+// payments routes
+Route::prefix('payments')->group(function () {
+    Route::get('/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('/', [PaymentController::class, 'store'])->name('payments.store');
+    Route::get('/', [PaymentController::class, 'index'])->name('payments.index');
+    // Route::put('/{id}/update', [PaymentController::class, 'update'])->name('expenses.update');
+    // Route::delete('/{id}', [PaymentController::class, 'destroy'])->name('expenses.destroy');
+});
 
 
 

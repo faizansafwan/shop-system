@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Home Page')
-
+@section('title', 'Dashboard')
 
 @section('content')
-    <h1>Welcome to the Home Page</h1>
+<div class="w-full px-4">
+  welcome
+
+
+</div>
 @endsection

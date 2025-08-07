@@ -12,10 +12,10 @@ class Sell extends Model
         'product_id',
         'qty',
         'price',
-        'extra_qty',
         'discount',
+        'total',
         'description',
-        'payment_status'
+        
     ];
 
 
@@ -30,4 +30,11 @@ class Sell extends Model
     {
         return $this->belongsTo(Shop::class, 'shop_id');
     }
+
+
+    public function payment()
+    {
+        return $this->hasOne(Payment::class, 'sell_id');
+    }
+
 }
